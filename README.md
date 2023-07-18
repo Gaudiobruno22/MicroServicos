@@ -4,16 +4,16 @@
 
 Dica: botão direito -> Salvar link como
 
-[Postman collection](https://raw.githubusercontent.com/acenelio/ms-course/main/MS_Course_postman_collection.json)
+ <!--[Postman collection](https://raw.githubusercontent.com/acenelio/ms-course/main/MS_Course_postman_collection.json) -->
 
-[Postman environment](https://raw.githubusercontent.com/acenelio/ms-course/main/MS_Course_env_postman_environment.json)
+<!--[Postman environment](https://raw.githubusercontent.com/acenelio/ms-course/main/MS_Course_env_postman_environment.json) -->
 
 
 # Fase 1: Comunicação simples, Feign, Ribbon
 
-### 1.1 Criar projeto hr-worker
+### 1.1 Criar projeto rh-worker
 
-### 1.2 Implementar projeto hr-worker
+### 1.2 Implementar projeto rh-worker
 
 Script SQL
 ```sql
@@ -24,7 +24,7 @@ INSERT INTO tb_worker (name, daily_Income) VALUES ('Alex', 250.0);
 
 application.properties
 ```
-spring.application.name=hr-worker
+spring.application.name=rh-worker
 server.port=8001
 
 # Database configuration
@@ -40,11 +40,11 @@ spring.h2.console.path=/h2-console
 
 application.properties
 ```
-spring.application.name=hr-payroll
+spring.application.name=rh-payroll
 server.port=8101
 ```
 
-### 1.4 Implementar projeto hr-payroll (mock)
+### 1.4 Implementar projeto rh-payroll (mock)
 
 ### 1.5 RestTemplate
 
@@ -58,9 +58,9 @@ Run configuration
 ```
 # Fase 2: Eureka, Hystrix, Zuul
 
-### 2.1 Criar projeto hr-eureka-server
+### 2.1 Criar projeto rh-eureka
 
-### 2.2 Configurar hr-eureka-server
+### 2.2 Configurar rh-eureka
 
 Porta padrão: 8761
 
@@ -68,14 +68,14 @@ Acessar o dashboard no navegador: http://localhost:8761
 
 ### 2.3 Configurar clientes Eureka
 
-Eliminar o Ribbon de hr-payroll:
+Eliminar o Ribbon de rh-payroll:
 - Dependência Maven
 - Annotation no programa principal
 - Configuração em application.properties
 
 Atenção: aguardar um pouco depois de subir os microsserviços
 
-### 2.4 Random port para hr-worker
+### 2.4 Random port para rh-worker
 
 ```
 server.port=${PORT:0}
@@ -83,7 +83,7 @@ server.port=${PORT:0}
 eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
 ```
 
-Atenção: deletar as configurações múltiplas de execução de hr-worker
+Atenção: deletar as configurações múltiplas de execução de rh-worker
 
 ### 2.5 Tolerância a falhas com Hystrix
 
@@ -97,13 +97,13 @@ ribbon.ConnectTimeout=10000
 ribbon.ReadTimeout=20000
 ```
 
-### 2.7 Criar projeto hr-zuul-server
+### 2.7 Criar projeto rh-api-gateway
 
-### 2.8 Configurar hr-zuul-server
+### 2.8 Configurar rh-api-gateway
 
 Porta padrão: 8765
 
-### 2.9 Random port para hr-payroll
+### 2.9 Random port para rh-payroll
 
 
 ### 2.10 Zuul timeout
@@ -114,27 +114,27 @@ Se o timeout estiver configurado somente em Zuul, o Hystrix vai chamar o método
 
 # Fase 3: Configuração centralizada
 
-### 3.1 Criar projeto hr-config-server
+### 3.1 Criar projeto rh-server-config
 
-### 3.2 Configurar projeto hr-config-server
+### 3.2 Configurar projeto rh-server-config
 
 Quando um microsserviço é levantado, antes de se registrar no Eureka, ele busca as configurações no repositório central de configurações.
 
-hr-worker.properties
+rh-worker.properties
 ```
 test.config=My config value default profile
 ```
-hr-worker-test.properties
+rh-worker-test.properties
 ```
 test.config=My config value test profile
 ```
 Teste:
 ```
-http://localhost:8888/hr-worker/default
-http://localhost:8888/hr-worker/test
+http://localhost:8888/rh-worker/default
+http://localhost:8888/rh-worker/test
 ```
 
-### 3.3 hr-worker como cliente do servidor de configuração, profiles ativos
+### 3.3 rh-worker como cliente do servidor de configuração, profiles ativos
 
 No arquivo bootstrap.properties configuramos somente o que for relacionado com o servidor de configuração, e também o profile do projeto.
 
@@ -150,9 +150,9 @@ Atenção: reinicie a IDE depois de adicionar as variáveis de ambiente
 
 # Fase 4: autenticação e autorização
 
-### 4.1 Criar projeto hr-user
+### 4.1 Criar projeto rh-user
 
-### 4.2 Configurar projeto hr-user
+### 4.2 Configurar projeto rh-user
 
 ### 4.3 Entidades User, Role e associação N-N
 
@@ -171,9 +171,9 @@ INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
 
 ### 4.5 UserRepository, UserResource, Zuul config
 
-### 4.6 Criar projeto hr-oauth
+### 4.6 Criar projeto rh-oauth
 
-### 4.7 Configurar projeto hr-oauth
+### 4.7 Configurar projeto rh-oauth
 
 ### 4.8 UserFeignClient
 
@@ -187,7 +187,7 @@ Basic authorization = "Basic " + Base64.encode(client-id + ":" + client-secret)
 
 ### 4.10 Autorização de recursos pelo gateway Zuul
 
-### 4.11 Deixando o Postman top
+### 4.11 Customizando o Postman
 
 Variáveis:
 - api-gateway: http://localhost:8765
@@ -211,7 +211,7 @@ if (responseCode.code >= 200 && responseCode.code < 300) {
 
 Teste no navegador:
 ```js
-fetch("http://localhost:8765/hr-worker/workers", {
+fetch("http://localhost:8765/rh-worker/workers", {
   "headers": {
     "accept": "*/*",
     "accept-language": "en-US,en;q=0.9,pt-BR;q=0.8,pt;q=0.7",
